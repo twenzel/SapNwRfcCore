@@ -20,6 +20,11 @@ jobs:
       with:
         ref: ${{ github.head_ref }}   # checkout the correct branch name
         fetch-depth: 0                # fetch the whole repo history
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
 
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v4.5.0
@@ -29,11 +34,6 @@ jobs:
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
       uses: gittools/actions/gitversion/execute@v4.5.0
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.x
 
     - name: Install dependencies
       run: dotnet restore
