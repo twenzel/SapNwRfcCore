@@ -1,7 +1,7 @@
 using System;
-using FluentAssertions;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Pooling;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Pooling;
@@ -21,7 +21,7 @@ public sealed class SapConnectionPoolIntegrationTests
         Action action = () => connection.InvokeFunction("TestFunc");
 
         // Assert
-        action.Should().Throw<SapCommunicationFailedException>();
+        action.ShouldThrow<SapCommunicationFailedException>();
     }
 
     [Fact(Skip = "SAP libs not available on CI/CD pipeline")]
@@ -33,11 +33,13 @@ public sealed class SapConnectionPoolIntegrationTests
         var connection = new SapPooledConnection(pool);
 
         // Act
-        try { connection.InvokeFunction<TestOutput>("TestFunc", input); } catch { }
+        try
+        { connection.InvokeFunction<TestOutput>("TestFunc", input); }
+        catch { }
         Action action = () => connection.Dispose();
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 
     public sealed class TestInput

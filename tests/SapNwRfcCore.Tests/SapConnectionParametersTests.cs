@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using AutoFixture;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests;
@@ -21,8 +21,7 @@ public sealed class SapConnectionParametersTests
         Action action = () => SapConnectionParameters.Parse(connectionString);
 
         // Assert
-        action.Should().Throw<ArgumentException>()
-            .Which.ParamName.Should().Be("connectionString");
+        action.ShouldThrow<ArgumentException>().ParamName.ShouldBe("connectionString");
     }
 
     [Fact]
@@ -35,10 +34,10 @@ public sealed class SapConnectionParametersTests
         var parameters = SapConnectionParameters.Parse(connectionString);
 
         // Assert
-        parameters.Should().NotBeNull();
-        parameters.AppServerHost.Should().Be("MyFancyHost");
-        parameters.User.Should().Be("SomeUsername");
-        parameters.Password.Should().Be("SomePassword");
+        parameters.ShouldNotBeNull();
+        parameters.AppServerHost.ShouldBe("MyFancyHost");
+        parameters.User.ShouldBe("SomeUsername");
+        parameters.Password.ShouldBe("SomePassword");
     }
 
     [Fact]
@@ -51,8 +50,8 @@ public sealed class SapConnectionParametersTests
         var parameters = SapConnectionParameters.Parse(connectionString);
 
         // Assert
-        parameters.Should().NotBeNull();
-        parameters.Password.Should().Be("my=password");
+        parameters.ShouldNotBeNull();
+        parameters.Password.ShouldBe("my=password");
     }
 
     [Fact]
@@ -74,6 +73,6 @@ public sealed class SapConnectionParametersTests
         var parameters = SapConnectionParameters.Parse(connectionString);
 
         // Assert
-        parameters.Should().BeEquivalentTo(expectedParameters);
+        parameters.ShouldBeEquivalentTo(expectedParameters);
     }
 }

@@ -1,9 +1,9 @@
 using System;
 using AutoFixture;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests;
@@ -34,10 +34,7 @@ public sealed class SapServerConnectionTests
         var sapAttributes = serverConnection.GetAttributes();
 
         // Assert
-        sapAttributes.Should().BeEquivalentTo(rfcAttributes, ctx => ctx
-            .ComparingByMembers<RfcAttributes>()
-            .ComparingByMembers<SapAttributes>()
-            .ExcludingMissingMembers());
+        sapAttributes.ShouldBeEquivalentToObject(rfcAttributes);
     }
 
     [Fact]
@@ -55,6 +52,6 @@ public sealed class SapServerConnectionTests
         Action action = () => serverConnection.GetAttributes();
 
         // Assert
-        action.Should().Throw<SapException>();
+        action.ShouldThrow<SapException>();
     }
 }

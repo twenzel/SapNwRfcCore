@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Internal;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal;
@@ -23,7 +23,7 @@ public sealed class InputMapperTests
         var action = () => InputMapper.Apply(_interopMock.Object, DataHandle, null);
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 
     [Fact]
@@ -457,8 +457,8 @@ public sealed class InputMapperTests
         var action = () => InputMapper.Apply(_interopMock.Object, DataHandle, new { UnknownType = 1.0f });
 
         // Assert
-        action.Should().Throw<InvalidOperationException>()
-            .WithMessage("No matching field constructor found");
+        action.ShouldThrow<InvalidOperationException>()
+            .Message.ShouldBe("No matching field constructor found");
     }
 
     private sealed class TableModel

@@ -1,6 +1,6 @@
 using System.Linq;
-using FluentAssertions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal.Interop.Extensions;
@@ -17,7 +17,7 @@ public sealed class SapConnectionParametersExtensionsTests
         RfcConnectionParameter[] interopParameters = parameters.ToInterop();
 
         // Assert
-        interopParameters.Should().BeEmpty();
+        interopParameters.ShouldBeEmpty();
     }
 
     [Fact]
@@ -34,9 +34,9 @@ public sealed class SapConnectionParametersExtensionsTests
         RfcConnectionParameter[] interopParameters = parameters.ToInterop();
 
         // Assert
-        interopParameters.Should().HaveCount(2);
-        interopParameters.First().Should().BeEquivalentTo(new { Name = "NAME", Value = "SomeName" });
-        interopParameters.Last().Should().BeEquivalentTo(new { Name = "LANG", Value = "EN" });
+        interopParameters.ShouldHaveCount(2);
+        interopParameters.First().ShouldBeEquivalentToObject(new { Name = "NAME", Value = "SomeName" });
+        interopParameters.Last().ShouldBeEquivalentToObject(new { Name = "LANG", Value = "EN" });
     }
 
     [Fact]
@@ -52,6 +52,6 @@ public sealed class SapConnectionParametersExtensionsTests
         RfcConnectionParameter[] interopParameters = parameters.ToInterop();
 
         // Assert
-        interopParameters.First().Name.Should().Be("REPOSITORY_PASSWD");
+        interopParameters.First().Name.ShouldBe("REPOSITORY_PASSWD");
     }
 }

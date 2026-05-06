@@ -1,9 +1,9 @@
 using System;
 using AutoFixture;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests;
@@ -50,8 +50,7 @@ public sealed class SapConnectionTests
         Action action = () => connection.Connect();
 
         // Assert
-        action.Should().Throw<SapException>()
-            .WithMessage("SAP RFC Error: RFC_TIMEOUT");
+        action.ShouldThrow<SapException>().Message.ShouldBe("SAP RFC Error: RFC_TIMEOUT");
     }
 
     [Fact]
@@ -106,8 +105,8 @@ public sealed class SapConnectionTests
         Action action = () => connection.Disconnect();
 
         // Assert
-        action.Should().Throw<SapException>()
-            .WithMessage("SAP RFC Error: RFC_CANCELED");
+        action.ShouldThrow<SapException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_CANCELED");
     }
 
     [Fact]
@@ -148,7 +147,7 @@ public sealed class SapConnectionTests
         Action action = () => connection.Dispose();
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 
     [Fact]
@@ -171,7 +170,7 @@ public sealed class SapConnectionTests
         bool isConnected = connection.IsValid;
 
         // Assert
-        isConnected.Should().BeTrue();
+        isConnected.ShouldBeTrue();
     }
 
     [Fact]
@@ -195,7 +194,7 @@ public sealed class SapConnectionTests
         bool isConnected = connection.IsValid;
 
         // Assert
-        isConnected.Should().BeFalse();
+        isConnected.ShouldBeFalse();
     }
 
     [Fact]
@@ -218,7 +217,7 @@ public sealed class SapConnectionTests
         bool isConnected = connection.IsValid;
 
         // Assert
-        isConnected.Should().BeFalse();
+        isConnected.ShouldBeFalse();
     }
 
     [Fact]
@@ -241,7 +240,7 @@ public sealed class SapConnectionTests
         bool isConnected = connection.IsValid;
 
         // Assert
-        isConnected.Should().BeFalse();
+        isConnected.ShouldBeFalse();
     }
 
     [Fact]
@@ -263,7 +262,7 @@ public sealed class SapConnectionTests
         var function = connection.CreateFunction("FunctionA");
 
         // Assert
-        function.Should().NotBeNull();
+        function.ShouldNotBeNull();
         _interopMock.Verify(x => x.CreateFunction(FunctionDescriptionHandle, out errorInfo), Times.Once);
     }
 
@@ -287,7 +286,7 @@ public sealed class SapConnectionTests
         var isValid = connection.IsValid;
 
         // Assert
-        isValid.Should().BeTrue();
+        isValid.ShouldBeTrue();
     }
 
     [Fact]
@@ -310,7 +309,7 @@ public sealed class SapConnectionTests
         var isValid = connection.IsValid;
 
         // Assert
-        isValid.Should().BeFalse();
+        isValid.ShouldBeFalse();
     }
 
     [Fact]
@@ -323,7 +322,7 @@ public sealed class SapConnectionTests
         var pingResult = connection.Ping();
 
         // Assert
-        pingResult.Should().BeFalse();
+        pingResult.ShouldBeFalse();
     }
 
     [Fact]
@@ -344,7 +343,7 @@ public sealed class SapConnectionTests
         var pingResult = connection.Ping();
 
         // Assert
-        pingResult.Should().BeTrue();
+        pingResult.ShouldBeTrue();
     }
 
     [Fact]
@@ -365,7 +364,7 @@ public sealed class SapConnectionTests
         var pingResult = connection.Ping();
 
         // Assert
-        pingResult.Should().BeFalse();
+        pingResult.ShouldBeFalse();
     }
 
     [Fact]
@@ -384,11 +383,8 @@ public sealed class SapConnectionTests
         var attributes = connection.GetAttributes();
 
         // Assert
-        attributes.Should().NotBeNull();
-        attributes.Should().BeEquivalentTo(rfcAttributes, config => config
-            .ComparingByMembers<RfcAttributes>()
-            .ComparingByMembers<SapAttributes>()
-            .ExcludingMissingMembers());
+        attributes.ShouldNotBeNull();
+        attributes.ShouldBeEquivalentToObject(rfcAttributes);
     }
 
     [Fact]
@@ -406,7 +402,7 @@ public sealed class SapConnectionTests
         Action action = () => connection.GetAttributes();
 
         // Assert
-        action.Should().Throw<SapException>()
-            .WithMessage("SAP RFC Error: RFC_CLOSED");
+        action.ShouldThrow<SapException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_CLOSED");
     }
 }

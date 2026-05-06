@@ -1,7 +1,7 @@
 using System;
-using FluentAssertions;
 using SapNwRfcCore.Internal.Fields;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal.Fields;
@@ -19,7 +19,7 @@ public sealed class FieldTests
         var result = fieldA.Equals(fieldB);
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public sealed class FieldTests
         var result = fieldA.Equals(fieldB);
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public sealed class FieldTests
         var result = fieldA.Equals(fieldB);
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public sealed class FieldTests
         var result = field.Equals(123);
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public sealed class FieldTests
         var hashB = fieldB.GetHashCode();
 
         // Assert
-        hashA.Should().Be(hashB);
+        hashA.ShouldBe(hashB);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class FieldTests
         var hashB = fieldB.GetHashCode();
 
         // Assert
-        hashA.Should().NotBe(hashB);
+        hashA.ShouldNotBe(hashB);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ public sealed class FieldTests
         var hashB = fieldB.GetHashCode();
 
         // Assert
-        hashA.Should().NotBe(hashB);
+        hashA.ShouldNotBe(hashB);
     }
 
     private class TestField : Field<bool>

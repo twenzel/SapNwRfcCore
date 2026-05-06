@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests;
@@ -22,7 +22,7 @@ public sealed class SapFunctionTests
         ISapFunction function = SapFunction.CreateFromDescriptionHandle(_interopMock.Object, RfcConnectionHandle, FunctionDescriptionHandle);
 
         // Assert
-        function.Should().NotBeNull();
+        function.ShouldNotBeNull();
         RfcErrorInfo errorInfo;
         _interopMock.Verify(x => x.CreateFunction(FunctionDescriptionHandle, out errorInfo), Times.Once);
     }
@@ -38,8 +38,8 @@ public sealed class SapFunctionTests
         var action = () => SapFunction.CreateFromDescriptionHandle(_interopMock.Object, RfcConnectionHandle, FunctionDescriptionHandle);
 
         // Assert
-        action.Should().Throw<SapException>()
-            .WithMessage("SAP RFC Error: RFC_NOT_FOUND");
+        action.ShouldThrow<SapException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_NOT_FOUND");
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public sealed class SapFunctionTests
         var result = function.HasParameter("PAR123");
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public sealed class SapFunctionTests
         var result = function.HasParameter("PAR123");
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -123,8 +123,8 @@ public sealed class SapFunctionTests
         var result = function.Invoke<OutputModel>();
 
         // Assert
-        result.Should().NotBeNull();
-        result.Value.Should().Be(value);
+        result.ShouldNotBeNull();
+        result.Value.ShouldBe(value);
         _interopMock.Verify(x => x.GetInt(FunctionHandle, "VALUE", out value, out errorInfo), Times.Once);
         _interopMock.Verify(x => x.Invoke(RfcConnectionHandle, FunctionHandle, out errorInfo), Times.Once);
     }

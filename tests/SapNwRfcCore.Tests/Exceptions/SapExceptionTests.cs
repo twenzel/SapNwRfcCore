@@ -1,8 +1,8 @@
 using System;
 using AutoFixture;
-using FluentAssertions;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Exceptions;
@@ -15,19 +15,19 @@ public sealed class SapExceptionTests
     public void ShouldInheritFromException()
     {
         // Assert
-        typeof(Exception).IsAssignableFrom(typeof(SapException)).Should().BeTrue();
+        typeof(Exception).IsAssignableFrom(typeof(SapException)).ShouldBeTrue();
     }
 
     [Fact]
-    public void Constructor_CodeAndErrorInfoWithMessage_ShouldSetMessageAndSetResultCode()
+    public void Constructor_CodeAndErrorInfoMessage_ShouldSetMessageAndSetResultCode()
     {
         // Act
         var errorInfo = new RfcErrorInfo { Message = "Some message" };
         var exception = new SapException(RfcResultCode.RFC_NOT_FOUND, errorInfo);
 
         // Assert
-        exception.Message.Should().Be("SAP RFC Error: RFC_NOT_FOUND with message: Some message");
-        exception.ResultCode.Should().Be(SapResultCode.NotFound);
+        exception.Message.ShouldBe("SAP RFC Error: RFC_NOT_FOUND with message: Some message");
+        exception.ResultCode.ShouldBe(SapResultCode.NotFound);
     }
 
     [Theory]
@@ -40,8 +40,8 @@ public sealed class SapExceptionTests
         var exception = new SapException(RfcResultCode.RFC_CANCELED, errorInfo);
 
         // Assert
-        exception.Message.Should().Be("SAP RFC Error: RFC_CANCELED");
-        exception.ResultCode.Should().Be(SapResultCode.Canceled);
+        exception.Message.ShouldBe("SAP RFC Error: RFC_CANCELED");
+        exception.ResultCode.ShouldBe(SapResultCode.Canceled);
     }
 
     [Fact]
@@ -66,15 +66,15 @@ public sealed class SapExceptionTests
         var exception = new SapException(RfcResultCode.RFC_CLOSED, errorInfo);
 
         // Assert
-        exception.ErrorInfo.ErrorGroup.Should().Be(SapErrorGroup.LogonFailure);
-        exception.ErrorInfo.Key.Should().Be(errorInfo.Key);
-        exception.ErrorInfo.Message.Should().Be(errorInfo.Message);
-        exception.ErrorInfo.AbapMessageClass.Should().Be(errorInfo.AbapMsgClass);
-        exception.ErrorInfo.AbapMessageType.Should().Be(errorInfo.AbapMsgType);
-        exception.ErrorInfo.AbapMessageNumber.Should().Be(errorInfo.AbapMsgNumber);
-        exception.ErrorInfo.AbapMessageV1.Should().Be(errorInfo.AbapMsgV1);
-        exception.ErrorInfo.AbapMessageV2.Should().Be(errorInfo.AbapMsgV2);
-        exception.ErrorInfo.AbapMessageV3.Should().Be(errorInfo.AbapMsgV3);
-        exception.ErrorInfo.AbapMessageV4.Should().Be(errorInfo.AbapMsgV4);
+        exception.ErrorInfo.ErrorGroup.ShouldBe(SapErrorGroup.LogonFailure);
+        exception.ErrorInfo.Key.ShouldBe(errorInfo.Key);
+        exception.ErrorInfo.Message.ShouldBe(errorInfo.Message);
+        exception.ErrorInfo.AbapMessageClass.ShouldBe(errorInfo.AbapMsgClass);
+        exception.ErrorInfo.AbapMessageType.ShouldBe(errorInfo.AbapMsgType);
+        exception.ErrorInfo.AbapMessageNumber.ShouldBe(errorInfo.AbapMsgNumber);
+        exception.ErrorInfo.AbapMessageV1.ShouldBe(errorInfo.AbapMsgV1);
+        exception.ErrorInfo.AbapMessageV2.ShouldBe(errorInfo.AbapMsgV2);
+        exception.ErrorInfo.AbapMessageV3.ShouldBe(errorInfo.AbapMsgV3);
+        exception.ErrorInfo.AbapMessageV4.ShouldBe(errorInfo.AbapMsgV4);
     }
 }

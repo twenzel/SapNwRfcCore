@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Pooling;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Pooling;
@@ -186,7 +186,7 @@ public sealed class SapPooledConnectionTests
         Action action = () => InvokeActions[invokeFlavor](connection);
 
         // Assert
-        action.Should().Throw<SapCommunicationFailedException>();
+        action.ShouldThrow<SapCommunicationFailedException>();
         _connectionPoolMock.Verify(x => x.GetConnection(It.IsAny<CancellationToken>()), Times.Once());
         _connectionPoolMock.Verify(x => x.ForgetConnection(It.IsAny<ISapConnection>()), Times.Never());
         VerifyActions[invokeFlavor](_rfcFunctionMock, Times.Never());

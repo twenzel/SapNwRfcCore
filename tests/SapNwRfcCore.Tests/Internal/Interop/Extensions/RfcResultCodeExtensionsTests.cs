@@ -1,8 +1,8 @@
 using System;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal.Interop.Extensions;
@@ -20,7 +20,7 @@ public sealed class RfcResultCodeExtensionsTests
         Action action = () => resultCode.ThrowOnError(errorInfo);
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 
     [Fact]
@@ -50,8 +50,8 @@ public sealed class RfcResultCodeExtensionsTests
         Action action = () => resultCode.ThrowOnError(errorInfo, beforeThrowActionMock.Object);
 
         // Assert
-        action.Should().Throw<SapException>()
-            .Which.Message.Should().Be("SAP RFC Error: RFC_CLOSED with message: Connection closed");
+        action.ShouldThrow<SapException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_CLOSED with message: Connection closed");
         beforeThrowActionMock.Verify(x => x(), Times.Once);
     }
 
@@ -66,8 +66,8 @@ public sealed class RfcResultCodeExtensionsTests
         Action action = () => resultCode.ThrowOnError(errorInfo);
 
         // Assert
-        action.Should().Throw<SapCommunicationFailedException>()
-            .WithMessage("SAP RFC Error: RFC_COMMUNICATION_FAILURE with message: Failure error message");
+        action.ShouldThrow<SapCommunicationFailedException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_COMMUNICATION_FAILURE with message: Failure error message");
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public sealed class RfcResultCodeExtensionsTests
         Action action = () => resultCode.ThrowOnError(errorInfo);
 
         // Assert
-        action.Should().Throw<SapInvalidParameterException>()
-            .WithMessage("SAP RFC Error: RFC_INVALID_PARAMETER with message: Wrong parameter message");
+        action.ShouldThrow<SapInvalidParameterException>()
+            .Message.ShouldBe("SAP RFC Error: RFC_INVALID_PARAMETER with message: Wrong parameter message");
     }
 }

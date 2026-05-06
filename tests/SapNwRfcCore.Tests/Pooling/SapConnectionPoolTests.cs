@@ -1,12 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
-using FluentAssertions.Specialized;
 using Moq;
 using SapNwRfcCore.Exceptions;
 using SapNwRfcCore.Pooling;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Pooling;
@@ -22,7 +20,7 @@ public sealed class SapConnectionPoolTests
         var action = () => new SapConnectionPool(ConnectionParameters, connectionFactory: null);
 
         // Assert
-        action.Should().NotThrow();
+        action.ShouldNotThrow();
     }
 
     [Fact]
@@ -36,7 +34,7 @@ public sealed class SapConnectionPoolTests
         var connection = pool.GetConnection();
 
         // Assert
-        connection.Should().Be(connectionMock.Object);
+        connection.ShouldBe(connectionMock.Object);
         connectionMock.Verify(x => x.Connect(), Times.Once);
     }
 
@@ -54,9 +52,9 @@ public sealed class SapConnectionPoolTests
         var connection2 = pool.GetConnection();
 
         // Assert
-        connection1.Should().NotBeNull();
-        connection2.Should().NotBeNull();
-        connection1.Should().NotBe(connection2);
+        connection1.ShouldNotBeNull();
+        connection2.ShouldNotBeNull();
+        connection1.ShouldNotBe(connection2);
     }
 
     [Fact]
@@ -74,8 +72,8 @@ public sealed class SapConnectionPoolTests
         var connection2 = pool.GetConnection();
 
         // Assert
-        connection1.Should().NotBeNull();
-        connection2.Should().Be(connection1);
+        connection1.ShouldNotBeNull();
+        connection2.ShouldBe(connection1);
     }
 
     [Fact]
@@ -93,9 +91,9 @@ public sealed class SapConnectionPoolTests
         var connection2 = pool.GetConnection();
 
         // Assert
-        connection1.Should().NotBeNull();
-        connection2.Should().NotBeNull();
-        connection2.Should().NotBe(connection1);
+        connection1.ShouldNotBeNull();
+        connection2.ShouldNotBeNull();
+        connection2.ShouldNotBe(connection1);
     }
 
     [Fact]
@@ -111,7 +109,7 @@ public sealed class SapConnectionPoolTests
         Action action = () => pool.GetConnection();
 
         // Assert
-        action.Should().Throw<InvalidOperationException>();
+        action.ShouldThrow<InvalidOperationException>();
     }
 
     [Fact]
@@ -131,11 +129,13 @@ public sealed class SapConnectionPoolTests
             connectionFactory: connectionFactoryMock.Object);
 
         // Act
-        try { pool.GetConnection(); } catch { }
+        try
+        { pool.GetConnection(); }
+        catch { }
         Action action = () => pool.GetConnection();
 
         // Assert
-        action.ExecutionTime().Should().BeLessThan(100.Milliseconds());
+        action.ExecutionTime().ShouldBeLessThan(TimeSpan.FromMilliseconds(100));
     }
 
     [Fact]
@@ -153,7 +153,7 @@ public sealed class SapConnectionPoolTests
         Action action = () => pool.GetConnection();
 
         // Assert
-        action.Should().Throw<SapCommunicationFailedException>();
+        action.ShouldThrow<SapCommunicationFailedException>();
     }
 
     [Fact]
@@ -170,16 +170,28 @@ public sealed class SapConnectionPoolTests
         // Act
         Action action = () =>
         {
-            try { pool.GetConnection(); } catch { }
-            try { pool.GetConnection(); } catch { }
-            try { pool.GetConnection(); } catch { }
-            try { pool.GetConnection(); } catch { }
-            try { pool.GetConnection(); } catch { }
-            try { pool.GetConnection(); } catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
+            try
+            { pool.GetConnection(); }
+            catch { }
         };
 
         // Assert
-        action.ExecutionTime().Should().BeLessThan(500.Milliseconds());
+        action.ExecutionTime().ShouldBeLessThan(TimeSpan.FromMilliseconds(500));
     }
 
     [Fact]
@@ -212,7 +224,7 @@ public sealed class SapConnectionPoolTests
         taskTookConnection.Wait(TimeSpan.FromSeconds(2));
 
         // Assert
-        action.ExecutionTime().Should().BeLessThan(500.Milliseconds());
+        action.ExecutionTime().ShouldBeLessThan(TimeSpan.FromMilliseconds(500));
     }
 
     [Fact]
@@ -240,10 +252,10 @@ public sealed class SapConnectionPoolTests
 
         // Assert
         var executionTime = action.ExecutionTime();
-        executionTime.Should().BeLessThan(500.Milliseconds());
-        executionTime.Should().BeGreaterThan(100.Milliseconds());
-        connection2.Should().NotBeNull();
-        connection2.Should().Be(connection1);
+        executionTime.ShouldBeLessThan(TimeSpan.FromMilliseconds(500));
+        executionTime.ShouldBeGreaterThan(TimeSpan.FromMilliseconds(100));
+        connection2.ShouldNotBeNull();
+        connection2.ShouldBe(connection1);
     }
 
     [Fact]
@@ -274,10 +286,10 @@ public sealed class SapConnectionPoolTests
 
         // Assert
         var executionTime = action.ExecutionTime();
-        executionTime.Should().BeLessThan(275.Milliseconds());
-        executionTime.Should().BeGreaterThan(100.Milliseconds());
-        connection3.Should().NotBeNull();
-        connection3.Should().Be(connection1);
+        executionTime.ShouldBeLessThan(TimeSpan.FromMilliseconds(275));
+        executionTime.ShouldBeGreaterThan(TimeSpan.FromMilliseconds(100));
+        connection3.ShouldNotBeNull();
+        connection3.ShouldBe(connection1);
     }
 
     [Fact]
@@ -305,10 +317,10 @@ public sealed class SapConnectionPoolTests
 
         // Assert
         var executionTime = action.ExecutionTime();
-        executionTime.Should().BeLessThan(500.Milliseconds());
-        executionTime.Should().BeGreaterThan(100.Milliseconds());
-        connection2.Should().NotBeNull();
-        connection2.Should().NotBe(connection1);
+        executionTime.ShouldBeLessThan(TimeSpan.FromMilliseconds(500));
+        executionTime.ShouldBeGreaterThan(TimeSpan.FromMilliseconds(100));
+        connection2.ShouldNotBeNull();
+        connection2.ShouldNotBe(connection1);
     }
 
     [Fact]

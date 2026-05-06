@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests;
@@ -12,6 +12,6 @@ public sealed class SapNameAttributeTests
         var attribute = new SapNameAttribute("SomeName");
 
         // Assert
-        attribute.Name.Should().Be("SomeName");
+        attribute.Name.ShouldBe("SomeName");
     }
 }

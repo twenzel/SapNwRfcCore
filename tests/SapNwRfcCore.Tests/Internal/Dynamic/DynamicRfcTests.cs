@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Internal.Dynamic;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal.Dynamic;
@@ -53,8 +53,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Theory]
@@ -72,8 +72,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Theory]
@@ -89,8 +89,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Theory]
@@ -106,8 +106,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Theory]
@@ -138,8 +138,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Theory]
@@ -162,8 +162,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(new DateTime(2020, 04, 05, 0, 0, 0, DateTimeKind.Unspecified));
+        valid.ShouldBeTrue();
+        result.ShouldBe(new DateTime(2020, 04, 05, 0, 0, 0, DateTimeKind.Unspecified));
     }
 
     [Theory]
@@ -186,8 +186,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(new TimeSpan(12, 34, 56));
+        valid.ShouldBeTrue();
+        result.ShouldBe(new TimeSpan(12, 34, 56));
     }
 
     [Theory(Skip = "Needs dynamic buffer length detection.")]
@@ -212,8 +212,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", (SapRfcType)type, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(value);
+        valid.ShouldBeTrue();
+        result.ShouldBe(value);
     }
 
     [Fact]
@@ -225,8 +225,8 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", SapRfcType.RFCTYPE_NULL, null, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().Be(null);
+        valid.ShouldBeTrue();
+        result.ShouldBe(null);
     }
 
     [Fact]
@@ -258,19 +258,19 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", SapRfcType.RFCTYPE_STRUCTURE, () => metadataMock.Object, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().BeAssignableTo<IReadOnlyDictionary<string, object>>();
+        valid.ShouldBeTrue();
+        result.ShouldBeAssignableTo<IReadOnlyDictionary<string, object>>();
 
         dynamic dynamicStructure = result;
 
-        ((object)dynamicStructure.Count).Should().Be(1);
-        ((object)dynamicStructure.TEST).Should().Be(intValue);
-        ((object)dynamicStructure[0]).Should().Be(intValue);
+        ((object)dynamicStructure.Count).ShouldBe(1);
+        ((object)dynamicStructure.TEST).ShouldBe(intValue);
+        ((object)dynamicStructure[0]).ShouldBe(intValue);
 
         foreach (var kvp in dynamicStructure)
         {
-            ((object)kvp.Key).Should().Be("TEST");
-            ((object)kvp.Value).Should().Be(intValue);
+            ((object)kvp.Key).ShouldBe("TEST");
+            ((object)kvp.Value).ShouldBe(intValue);
         }
     }
 
@@ -316,17 +316,17 @@ public sealed class DynamicRfcTests
         bool valid = DynamicRfc.TryGetRfcValue(_interopMock.Object, DataHandle, "test", SapRfcType.RFCTYPE_TABLE, () => metadataMock.Object, typeof(object), out object result);
 
         // Assert
-        valid.Should().BeTrue();
-        result.Should().BeAssignableTo<IReadOnlyList<object>>();
+        valid.ShouldBeTrue();
+        result.ShouldBeAssignableTo<IReadOnlyList<object>>();
 
         dynamic dynamicTable = result;
 
-        ((object)dynamicTable.Count).Should().Be(rowCount);
-        ((object)dynamicTable[0].TEST).Should().Be(intValue);
+        ((object)dynamicTable.Count).ShouldBe(rowCount);
+        ((object)dynamicTable[0].TEST).ShouldBe(intValue);
 
         foreach (var row in dynamicTable)
         {
-            ((object)row.TEST).Should().Be(intValue);
+            ((object)row.TEST).ShouldBe(intValue);
         }
     }
 }

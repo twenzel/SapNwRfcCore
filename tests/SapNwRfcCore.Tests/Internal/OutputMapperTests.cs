@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using FluentAssertions;
 using Moq;
 using SapNwRfcCore.Internal;
 using SapNwRfcCore.Internal.Interop;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Internal;
@@ -37,7 +37,8 @@ public sealed class OutputMapperTests
             {
                 ei = default;
                 sl = stringLength;
-                if (buffer.Length <= 0 || bufferLength <= 0) return;
+                if (buffer.Length <= 0 || bufferLength <= 0)
+                    return;
                 Array.Copy(stringValue.ToCharArray(), buffer, stringValue.Length);
             }))
             .Returns(resultCodeQueue.Dequeue);
@@ -53,8 +54,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetString(DataHandle, "STRINGVALUE", It.IsAny<char[]>(), stringLength + 1, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.StringValue.Should().Be(stringValue);
+        result.ShouldNotBeNull();
+        result.StringValue.ShouldBe(stringValue);
     }
 
     [Fact]
@@ -73,8 +74,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetString(DataHandle, "STRINGVALUE", Array.Empty<char>(), 0, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.StringValue.Should().BeEmpty();
+        result.ShouldNotBeNull();
+        result.StringValue.ShouldBeEmpty();
     }
 
     private sealed class StringModel
@@ -97,8 +98,8 @@ public sealed class OutputMapperTests
         var result = OutputMapper.Extract<IntModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        result.Should().NotBeNull();
-        result.IntValue.Should().Be(intValue);
+        result.ShouldNotBeNull();
+        result.IntValue.ShouldBe(intValue);
     }
 
     private sealed class IntModel
@@ -121,8 +122,8 @@ public sealed class OutputMapperTests
         var result = OutputMapper.Extract<LongModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        result.Should().NotBeNull();
-        result.LongValue.Should().Be(longValue);
+        result.ShouldNotBeNull();
+        result.LongValue.ShouldBe(longValue);
     }
 
     private sealed class LongModel
@@ -145,8 +146,8 @@ public sealed class OutputMapperTests
         var result = OutputMapper.Extract<DoubleModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        result.Should().NotBeNull();
-        result.DoubleValue.Should().Be(doubleValue);
+        result.ShouldNotBeNull();
+        result.DoubleValue.ShouldBe(doubleValue);
     }
 
     private sealed class DoubleModel
@@ -172,7 +173,8 @@ public sealed class OutputMapperTests
             {
                 ei = default;
                 sl = stringLength;
-                if (buffer.Length <= 0 || bufferLength <= 0) return;
+                if (buffer.Length <= 0 || bufferLength <= 0)
+                    return;
                 Array.Copy(stringValue.ToCharArray(), buffer, stringValue.Length);
             }))
             .Returns(resultCodeQueue.Dequeue);
@@ -188,8 +190,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetString(DataHandle, "DECIMALVALUE", It.IsAny<char[]>(), stringLength + 1, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.DecimalValue.Should().Be(value);
+        result.ShouldNotBeNull();
+        result.DecimalValue.ShouldBe(value);
     }
 
     [Fact]
@@ -208,8 +210,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetString(DataHandle, "DECIMALVALUE", Array.Empty<char>(), 0, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.DecimalValue.Should().Be(0M);
+        result.ShouldNotBeNull();
+        result.DecimalValue.ShouldBe(0M);
     }
 
     private sealed class DecimalModel
@@ -245,8 +247,9 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetXString(DataHandle, "BYTESVALUE", It.IsAny<byte[]>(), 3, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.BytesValue.Should().StartWith(value);
+        result.ShouldNotBeNull();
+        for (int i = 0; i < value.Length; i++)
+            result.BytesValue[i].ShouldBe(value[i]);
     }
 
     [Theory]
@@ -284,8 +287,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetXString(DataHandle, "BYTESVALUE", It.IsAny<byte[]>(), byteLength, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.BytesValue.Should().BeEquivalentTo(value);
+        result.ShouldNotBeNull();
+        result.BytesValue.ShouldBeEquivalentTo(value);
     }
 
     [Fact]
@@ -304,8 +307,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetXString(DataHandle, "BYTESVALUE", Array.Empty<byte>(), byteLength, out discard, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.BytesValue.Should().BeEmpty();
+        result.ShouldNotBeNull();
+        result.BytesValue.ShouldBeEmpty();
     }
 
     private sealed class FixedLengthBytesModel
@@ -343,8 +346,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetChars(DataHandle, "CHARSVALUE", It.IsAny<char[]>(), 3, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.CharsValue.Should().BeEquivalentTo(value);
+        result.ShouldNotBeNull();
+        result.CharsValue.ShouldBeEquivalentTo(value);
     }
 
     [Fact]
@@ -362,8 +365,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetChars(DataHandle, "CHARSVALUE", Array.Empty<char>(), 0, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.CharsValue.Should().BeEmpty();
+        result.ShouldNotBeNull();
+        result.CharsValue.ShouldBeEmpty();
     }
 
     private sealed class CharsModel
@@ -403,9 +406,9 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetDate(DataHandle, "NULLABLEDATETIMEVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.DateTimeValue.Should().Be(new DateTime(2020, 04, 05));
-        result.NullableDateTimeValue.Should().Be(new DateTime(2020, 04, 05));
+        result.ShouldNotBeNull();
+        result.DateTimeValue.ShouldBe(new DateTime(2020, 04, 05));
+        result.NullableDateTimeValue.ShouldBe(new DateTime(2020, 04, 05));
     }
 
     [Theory]
@@ -431,8 +434,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetDate(DataHandle, "DATETIMEVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.DateTimeValue.Should().Be(DateTime.MinValue);
+        result.ShouldNotBeNull();
+        result.DateTimeValue.ShouldBe(DateTime.MinValue);
     }
 
     [Theory]
@@ -458,8 +461,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetDate(DataHandle, "NULLABLEDATETIMEVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.NullableDateTimeValue.Should().BeNull();
+        result.ShouldNotBeNull();
+        result.NullableDateTimeValue.ShouldBeNull();
     }
 
     private sealed class DateTimeModel
@@ -495,9 +498,9 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetTime(DataHandle, "NULLABLETIMESPANVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.TimeSpanValue.Should().Be(new TimeSpan(12, 34, 56));
-        result.NullableTimeSpanValue.Should().Be(new TimeSpan(12, 34, 56));
+        result.ShouldNotBeNull();
+        result.TimeSpanValue.ShouldBe(new TimeSpan(12, 34, 56));
+        result.NullableTimeSpanValue.ShouldBe(new TimeSpan(12, 34, 56));
     }
 
     [Theory]
@@ -523,8 +526,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetTime(DataHandle, "TIMESPANVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.TimeSpanValue.Should().Be(TimeSpan.Zero);
+        result.ShouldNotBeNull();
+        result.TimeSpanValue.ShouldBe(TimeSpan.Zero);
     }
 
     [Theory]
@@ -550,8 +553,8 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetTime(DataHandle, "NULLABLETIMESPANVALUE", It.IsAny<char[]>(), out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.NullableTimeSpanValue.Should().BeNull();
+        result.ShouldNotBeNull();
+        result.NullableTimeSpanValue.ShouldBeNull();
     }
 
     private sealed class TimeSpanModel
@@ -596,9 +599,9 @@ public sealed class OutputMapperTests
             x => x.GetInt(rowHandle, "VALUE", out intValue, out errorInfo),
             Times.Exactly(3));
         _interopMock.Verify(x => x.MoveToNextRow(tableHandle, out errorInfo), Times.Exactly(3));
-        result.Should().NotBeNull();
-        result.Elements.Should().HaveCount(3);
-        result.Elements.First().Value.Should().Be(888);
+        result.ShouldNotBeNull();
+        result.Elements.ShouldHaveCount(3);
+        result.Elements.First().Value.ShouldBe(888);
     }
 
     [Fact]
@@ -624,8 +627,8 @@ public sealed class OutputMapperTests
         var result = OutputMapper.Extract<ArrayModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Elements.Should().HaveCount(1);
+        result.ShouldNotBeNull();
+        result.Elements.ShouldHaveCount(1);
     }
 
     [Fact]
@@ -662,8 +665,8 @@ public sealed class OutputMapperTests
             x => x.GetCurrentRow(tableHandle, out errorInfo),
             Times.Never);
         _interopMock.Verify(x => x.MoveToNextRow(tableHandle, out errorInfo), Times.Never);
-        result.Should().NotBeNull();
-        result.Elements.Should().HaveCount(0);
+        result.ShouldNotBeNull();
+        result.Elements.ShouldHaveCount(0);
     }
 
     private sealed class ArrayModel
@@ -723,8 +726,8 @@ public sealed class OutputMapperTests
             x => x.MoveToNextRow(tableHandle, out errorInfo),
             Times.Exactly(2));
 
-        result.Should().NotBeNull();
-        result.Elements.First().Value.Should().Be(888);
+        result.ShouldNotBeNull();
+        result.Elements.First().Value.ShouldBe(888);
     }
 
     [Fact]
@@ -763,8 +766,8 @@ public sealed class OutputMapperTests
             Times.Never);
         _interopMock.Verify(x => x.MoveToNextRow(tableHandle, out errorInfo), Times.Never);
 
-        result.Should().NotBeNull();
-        result.Elements.Should().NotBeNull();
+        result.ShouldNotBeNull();
+        result.Elements.ShouldNotBeNull();
     }
 
     private sealed class EnumerableModel
@@ -797,9 +800,9 @@ public sealed class OutputMapperTests
         _interopMock.Verify(
             x => x.GetInt(structHandle, "VALUE", out intValue, out errorInfo),
             Times.Once);
-        result.Should().NotBeNull();
-        result.InnerModel.Should().NotBeNull();
-        result.InnerModel.Value.Should().Be(123);
+        result.ShouldNotBeNull();
+        result.InnerModel.ShouldNotBeNull();
+        result.InnerModel.Value.ShouldBe(123);
     }
 
     private sealed class NestedModel
@@ -824,8 +827,8 @@ public sealed class OutputMapperTests
         var result = OutputMapper.Extract<IntAttributeModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        result.Should().NotBeNull();
-        result.IntValue.Should().Be(334);
+        result.ShouldNotBeNull();
+        result.IntValue.ShouldBe(334);
     }
 
     private sealed class IntAttributeModel
@@ -848,8 +851,8 @@ public sealed class OutputMapperTests
         // Assert
         _interopMock.Verify(x => x.GetInt(DataHandle, "VALUE", out value, out errorInfo), Times.Never);
 
-        result.Should().NotBeNull();
-        result.Value.Should().Be(0);
+        result.ShouldNotBeNull();
+        result.Value.ShouldBe(0);
     }
 
     private sealed class IgnoreAttributeModel
@@ -865,8 +868,8 @@ public sealed class OutputMapperTests
         var action = () => OutputMapper.Extract<UnknownTypeModel>(_interopMock.Object, DataHandle);
 
         // Assert
-        action.Should().Throw<InvalidOperationException>()
-            .WithMessage("No matching extract method found for type Single");
+        action.ShouldThrow<InvalidOperationException>()
+            .Message.ShouldBe("No matching extract method found for type Single");
     }
 
     private sealed class UnknownTypeModel

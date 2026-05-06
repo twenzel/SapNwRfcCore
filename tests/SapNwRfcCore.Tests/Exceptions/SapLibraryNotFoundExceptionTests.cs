@@ -1,6 +1,6 @@
 using System;
-using FluentAssertions;
 using SapNwRfcCore.Exceptions;
+using Shouldly;
 using Xunit;
 
 namespace SapNwRfcCore.Tests.Exceptions;
@@ -17,7 +17,7 @@ public sealed class SapLibraryNotFoundExceptionTests
         var exception = new SapLibraryNotFoundException(innerException);
 
         // Assert
-        exception.InnerException.Should().Be(innerException);
+        exception.InnerException.ShouldBe(innerException);
     }
 
     [Fact]
@@ -27,6 +27,6 @@ public sealed class SapLibraryNotFoundExceptionTests
         var exception = new SapLibraryNotFoundException(innerException: default);
 
         // Assert
-        exception.Message.Should().MatchRegex("The SAP RFC libraries were not found in the output folder or in a folder contained in the systems .* environment variable");
+        exception.Message.ShouldMatch("The SAP RFC libraries were not found in the output folder or in a folder contained in the systems .* environment variable");
     }
 }
