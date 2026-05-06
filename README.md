@@ -1,6 +1,6 @@
 # SAP NetWeaver RFC library
 
-[![Build status](https://github.com/twenzel/SapNwRfcCore/actions/workflows/build-test-publish.yml/badge.svg?branch=main)](https://github.com/twenzel/SapNwRfcCore/actions/workflows/build-test-publish.yml?query=branch%3Amain)
+[![Build status](https://github.com/twenzel/SapNwRfcCore/actions/workflows/build-test-publish.yml/badge.svg?branch=develop)](https://github.com/twenzel/SapNwRfcCore/actions/workflows/build-test-publish.yml?query=branch%3Adevelop)
 [![NuGet](https://img.shields.io/nuget/v/SapNwRfcCore.svg)](https://nuget.org/packages/SapNwRfcCore/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
