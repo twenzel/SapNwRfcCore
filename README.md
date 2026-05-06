@@ -10,13 +10,13 @@ The library is fully tested and production ready. Supported operating systems ar
 
 Also supports connection pooling for more complex applications, see [below](#connection-pooling).
 
-## Get it on [NuGet](https://www.nuget.org/packages/SapNwRfc/)
+## Get it on [NuGet](https://www.nuget.org/packages/SapNwRfcCore/)
 
-    dotnet add package SapNwRfc
+    dotnet add package SapNwRfcCore
     
 or
 
-    PM> Install-Package SapNwRfc
+    PM> Install-Package SapNwRfcCore
 
 ## Prerequisites
 
