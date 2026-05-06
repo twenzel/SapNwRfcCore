@@ -4,6 +4,7 @@
     <File Path="templates/EnumHelpers.tt" />
     <File Path="templates/Header.tt" />
   </Folder>
+  <Project Path="src/SapNwRfcCore.Hosting/SapNwRfcCore.Hosting.csproj" Id="eb1329fc-b0c7-408b-8cf7-794e8220b208" />
   <Project Path="src/SapNwRfcCore/SapNwRfcCore.csproj" />
   <Project Path="tests/SapNwRfcCore.Tests/SapNwRfcCore.Tests.csproj" />
 </Solution>

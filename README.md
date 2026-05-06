@@ -14,6 +14,8 @@ Also supports connection pooling for more complex applications, see [below](#con
 
     dotnet add package SapNwRfcCore
     
+    // or when using with Dependency Injection
+    dotnet add package SapNwRfcCore.Hosting
 or
 
     PM> Install-Package SapNwRfcCore
@@ -36,7 +38,7 @@ or to use the [`NativeLibrary.SetDllImportResolver`](https://docs.microsoft.com/
 
 A more flexible workaround is to set the import resolver for the `SapLibrary` using the [SetDllImportResolver](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.nativelibrary.setdllimportresolver?view=net-5.0)-method like this:
 
-```c#
+```csharp
 NativeLibrary.SetDllImportResolver(
     assembly: typeof(SapLibrary).Assembly,
     resolver: (string libraryName, Assembly assembly, DllImportSearchPath? searchPath) =>
@@ -56,7 +58,7 @@ NativeLibrary.SetDllImportResolver(
 
 ## Usage
 
-### Connect with SAP NetWeaver
+### Connect with SAP NetWeaver (direct)
 
 ```csharp
 string connectionString = "AppServerHost=MY_SERVER_HOST; SystemNumber=00; User=MY_SAP_USER; Password=SECRET; Client=100; Language=EN; PoolSize=5; Trace=8";
@@ -64,6 +66,34 @@ string connectionString = "AppServerHost=MY_SERVER_HOST; SystemNumber=00; User=M
 using var connection = new SapConnection(connectionString);
 connection.Connect();
 ```
+
+### Or setup via dependency injection
+
+```csharp
+string connectionString = "AppServerHost=MY_SERVER_HOST; SystemNumber=00; User=MY_SAP_USER; Password=SECRET; Client=100; Language=EN; PoolSize=5; Trace=8";
+
+services.AddSapConnector(connectionString);
+// or with custom connection parameters
+services.AddSapConnector(options => {
+    options.AppServerHost = "MY_SERVER_HOST";
+    options.SystemNumber = "00";
+    options.User = "MY_SAP_USER";
+    options.Password = "SECRET";
+    options.Client = "100";
+    options.Language = "EN";
+    options.PoolSize = 5;
+    options.Trace = 8;
+});
+
+
+// Inject the ISapConnectionFactory where you need it and create a connection
+ISapConnectionFactory _connectionFactory;
+
+using var connection = _connectionFactory.CreateConnection();
+connection.Connect();
+```
+
+
 
 ### Call function without input or output parameters
 
