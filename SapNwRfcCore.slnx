@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Folder Name="/Solution Items/templates/">
+    <File Path="templates/EnumHelpers.tt" />
+    <File Path="templates/Header.tt" />
+  </Folder>
+  <Project Path="src/SapNwRfcCore/SapNwRfcCore.csproj" />
+  <Project Path="tests/SapNwRfcCore.Tests/SapNwRfcCore.Tests.csproj" />
+</Solution>

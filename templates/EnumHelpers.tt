@@ -16,17 +16,19 @@ public static IEnumerable<string> ExtractEnumValues(string fileName)
 {
     ExtractionState state = ExtractionState.SearchDefinition;
     foreach (var line in File.ReadLines(fileName))
-    {
+    { 
         switch (state)
         {
             case ExtractionState.SearchDefinition:
-                if (Regex.IsMatch(line, @"^\s+(public|private|internal)\s+enum\s+\w+\s*$"))
+                if (Regex.IsMatch(line, @"^(public|private|internal)\s+enum\s+\w+\s*$"))
                     state = ExtractionState.SearchScopeStart;
                 break;
+
             case ExtractionState.SearchScopeStart:
                 if (line.Contains("{"))
                     state = ExtractionState.GatherValues;
                 break;
+
             case ExtractionState.GatherValues:
                 if (line.Contains("}"))
                     yield break;

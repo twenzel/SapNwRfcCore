@@ -1,0 +1,119 @@
+using SapNwRfcCore.Internal;
+using SapNwRfcCore.Internal.Dynamic;
+using SapNwRfcCore.Internal.Interop;
+
+namespace SapNwRfcCore;
+
+/// <summary>
+/// Represents an SAP RFC function.
+/// </summary>
+public sealed class SapFunction : ISapFunction
+{
+    private readonly RfcInterop _interop;
+    private readonly IntPtr _rfcConnectionHandle;
+    private readonly IntPtr _functionDescriptionHandle;
+    private readonly IntPtr _functionHandle;
+    private SapFunctionMetadata? _functionMetadata;
+
+    private SapFunction(
+        RfcInterop interop,
+        IntPtr rfcConnectionHandle,
+        IntPtr functionDescriptionHandle,
+        IntPtr functionHandle)
+    {
+        _interop = interop;
+        _rfcConnectionHandle = rfcConnectionHandle;
+        _functionDescriptionHandle = functionDescriptionHandle;
+        _functionHandle = functionHandle;
+    }
+
+    internal static ISapFunction CreateFromDescriptionHandle(
+        RfcInterop interop,
+        IntPtr rfcConnectionHandle,
+        IntPtr functionDescriptionHandle)
+    {
+        IntPtr functionHandle = interop.CreateFunction(
+            funcDescHandle: functionDescriptionHandle,
+            errorInfo: out var errorInfo);
+
+        errorInfo.ThrowOnError();
+
+        return new SapFunction(
+            interop: interop,
+            rfcConnectionHandle: rfcConnectionHandle,
+            functionDescriptionHandle: functionDescriptionHandle,
+            functionHandle: functionHandle);
+    }
+
+    /// <summary>
+    /// Disposes the SAP RFC function. Disposing automatically frees the underlying resource tied to this remote function.
+    /// </summary>
+    public void Dispose()
+    {
+        var resultCode = _interop.DestroyFunction(
+            funcHandle: _functionHandle,
+            out var errorInfo);
+
+        resultCode.ThrowOnError(errorInfo);
+    }
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public bool HasParameter(string parameterName)
+    {
+        var resultCode = _interop.GetParameterDescByName(
+            funcDesc: _functionDescriptionHandle,
+            name: parameterName,
+            paramDesc: out var parameterDescHandle,
+            errorInfo: out var errorInfo);
+
+        return resultCode == RfcResultCode.RFC_OK;
+    }
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public ISapFunctionMetadata Metadata => _functionMetadata ?? (_functionMetadata = new SapFunctionMetadata(_interop, _functionDescriptionHandle));
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public void Invoke()
+    {
+        var resultCode = _interop.Invoke(
+            rfcHandle: _rfcConnectionHandle,
+            funcHandle: _functionHandle,
+            out var errorInfo);
+
+        resultCode.ThrowOnError(errorInfo);
+    }
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public void Invoke(object input)
+    {
+        InputMapper.Apply(_interop, _functionHandle, input);
+
+        Invoke();
+    }
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public TOutput Invoke<TOutput>()
+    {
+        Invoke();
+
+        if (typeof(TOutput) == typeof(object))
+        {
+            return (TOutput)(object)new DynamicRfcFunction(_interop, _functionHandle, Metadata);
+        }
+
+        return OutputMapper.Extract<TOutput>(_interop, _functionHandle);
+    }
+
+    /// <inheritdoc cref="ISapFunction"/>
+    public TOutput Invoke<TOutput>(object input)
+    {
+        Invoke(input);
+
+        if (typeof(TOutput) == typeof(object))
+        {
+            return (TOutput)(object)new DynamicRfcFunction(_interop, _functionHandle, Metadata);
+        }
+
+        return OutputMapper.Extract<TOutput>(_interop, _functionHandle);
+    }
+}

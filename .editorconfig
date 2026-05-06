@@ -120,9 +120,9 @@ dotnet_naming_rule.member.style                                         = member
 # CSharp code style settings:
 [*.cs]
 # Prefer "var" when type is apparent
-csharp_style_var_for_built_in_types                                     = false : none
+csharp_style_var_for_built_in_types                                     = true : none
 csharp_style_var_when_type_is_apparent                                  = true : suggestion
-csharp_style_var_elsewhere                                              = false : suggestion
+csharp_style_var_elsewhere                                              = true : suggestion
 
 # Prefer method-like constructs to have a block body
 csharp_style_expression_bodied_methods                                  = false : none
@@ -175,6 +175,20 @@ csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
 csharp_space_between_method_call_name_and_opening_parenthesis           = false
 csharp_space_between_method_call_empty_parameter_list_parentheses       = false
 
+
+# Namespaces
+csharp_style_namespace_declarations = file_scoped:warning
+
 # Wrapping
 csharp_preserve_single_line_statements                                  = false
 csharp_preserve_single_line_blocks                                      = true
+
+# Analyzers
+dotnet_diagnostic.IDE0005.severity = warning      # Using directive is unnecessary
+dotnet_diagnostic.IDE0055.severity = error        # formatting rules
+dotnet_diagnostic.IDE1006.severity = warning      # naming rules
+dotnet_diagnostic.IDE0150.severity = none 		  # Null check can be clarified
+dotnet_diagnostic.BC42104.severity = error # BC42104: Variable is used before it has been assigned a value
+dotnet_diagnostic.BC42358.severity = error # because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.CS4014.severity = error # because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.BC42105.severity = error # BC42105: Function 'xy' doesn't return a value on all code paths. A null reference exception could occur at run time when the result is used.
